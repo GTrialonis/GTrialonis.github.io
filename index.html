@@ -4,58 +4,224 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>George Trialonis - Poems & Stories</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
+        :root {
+            --bg: #f9f9f9;
+            --text: #333;
+            --bg-panel: white;
+            --shadow: rgba(0,0,0,0.1);
+            --link: #2c3e50;
+            --border: #ddd;
+            --header: #444;
+            --accent: #555;
+        }
+
+        [data-theme="dark"] {
+            --bg: #1a1a1a;
+            --text: #e6e6e6;
+            --bg-panel: #2d2d2d;
+            --shadow: rgba(0,0,0,0.3);
+            --link: #88c;
+            --border: #444;
+            --header: #ddd;
+            --accent: #aaa;
+        }
+
         body {
             font-family: 'Georgia', serif;
             line-height: 1.6;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            color: #333;
-            background-color: #f9f9f9;
+            color: var(--text);
+            background-color: var(--bg);
+            transition: background-color 0.3s, color 0.3s;
         }
+
         header {
             text-align: center;
             margin-bottom: 40px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--border);
             padding-bottom: 20px;
         }
+
         h1 {
-            color: #444;
+            color: var(--header);
+            margin: 0;
         }
-        .poem, .story {
-            margin-bottom: 40px;
+
+        p.subtitle {
+            margin: 5px 0 0;
+            color: var(--accent);
+        }
+
+        /* Navigation Menu */
+        nav {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: var(--link);
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            background-color: var(--link);
+            color: white;
+        }
+
+        /* Theme Toggle */
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .toggle-btn {
+            background: var(--link);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: 0.3s;
+        }
+
+        /* Content Sections */
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            text-align: center;
+            color: var(--link);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .poem, .story, .opinion, .other {
+            margin-bottom: 30px;
             padding: 20px;
-            background: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: var(--bg-panel);
+            box-shadow: 0 2px 5px var(--shadow);
+            border-radius: 5px;
+            transition: background 0.3s;
         }
-        .poem-title, .story-title {
-            color: #2c3e50;
+
+        .poem-title, .story-title, .opinion-title, .other-title {
+            color: var(--link);
             margin-bottom: 10px;
+            font-size: 1.3em;
         }
-        .poem-content, .story-content {
+
+        .poem-content, .story-content, .opinion-content, .other-content {
             white-space: pre-line;
+            font-size: 1.1em;
+            line-height: 1.7;
         }
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--bg-panel);
+            box-shadow: 0 2px 5px var(--shadow);
+            border-radius: 5px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .contact-form button {
+            background: var(--link);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .contact-form button:hover {
+            opacity: 0.9;
+        }
+
+        /* PDF Button */
+        .pdf-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .pdf-button:hover {
+            background: #1a2530;
+        }
+
         footer {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 60px;
             padding-top: 20px;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid var(--border);
             font-size: 0.9em;
-            color: #777;
+            color: var(--accent);
         }
     </style>
 </head>
 <body>
     <header>
         <h1>George Trialonis</h1>
-        <p>Poems & Short Stories</p>
+        <p class="subtitle">Poems & Short Stories</p>
     </header>
 
-    <section id="poems">
-        <div class="poem">
-            <h2 class="poem-title">For a Moment I Thought...</h2>
-            <div class="poem-content">
+    <!-- Theme Toggle -->
+    <div class="toggle-container">
+        <button id="theme-toggle" class="toggle-btn">🌙 Dark Mode</button>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav>
+        <a href="#poems">Poems</a>
+        <a href="#stories">Stories</a>
+        <a href="#opinions">Opinions</a>
+        <a href="#other">Other</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <!-- Poems Section -->
+    <section id="poems" class="section">
+        <h2 class="section-title">Poems</h2>
+        <button class="pdf-button" onclick="generatePDF()">📥 Download Poems as PDF</button>
+        <div id="poems-content">
+            <div class="poem">
+                <h3 class="poem-title">For a Moment I Thought...</h3>
+                <div class="poem-content">
 by [GT]
 
 For a moment I thought
@@ -76,21 +242,24 @@ when you lose your wings to know
 that gravity always wins?
 And ultimately, to the ground —
 with or without wings.</i>
+                </div>
             </div>
-        </div>
 
-        <div class="poem">
-            <h2 class="poem-title">Title of Your Second Poem</h2>
-            <div class="poem-content">
-                Another beautiful poem goes here.
-                With all its lines and rhythm.
+            <div class="poem">
+                <h3 class="poem-title">Title of Your Second Poem</h3>
+                <div class="poem-content">
+                    Another beautiful poem goes here.
+                    With all its lines and rhythm.
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="stories">
+    <!-- Stories Section -->
+    <section id="stories" class="section">
+        <h2 class="section-title">Stories</h2>
         <div class="story">
-            <h2 class="story-title">Title of Your First Story</h2>
+            <h3 class="story-title">Title of Your First Story</h3>
             <div class="story-content">
                 Here is the beginning of your short story.
                 You can write as much as you want here.
@@ -100,8 +269,78 @@ with or without wings.</i>
         </div>
     </section>
 
+    <!-- Opinions Section -->
+    <section id="opinions" class="section">
+        <h2 class="section-title">Opinions</h2>
+        <div class="opinion">
+            <h3 class="opinion-title">On Aging and Memory</h3>
+            <div class="opinion-content">
+                Life slows down, not because we move less, 
+                but because each moment carries more weight.
+
+                I find myself looking back not with regret, 
+                but with curiosity — as if meeting an old friend 
+                I once knew as myself.
+            </div>
+        </div>
+    </section>
+
+    <!-- Other Section -->
+    <section id="other" class="section">
+        <h2 class="section-title">Other</h2>
+        <div class="other">
+            <h3 class="other-title">A Letter to My Younger Self</h3>
+            <div class="other-content">
+                Don’t rush the fall.
+                Even the leaf that flutters knows 
+                when it’s time to let go.
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <h2 class="section-title">Contact</h2>
+        <form class="contact-form" action="mailto:youremail@example.com" method="post" enctype="text/plain">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <input type="text" name="subject" placeholder="Subject">
+            <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
+
     <footer>
-        <p>© 2023 GTrialonis. All rights reserved.</p>
+        <p>© 2025 GTrialonis. All rights reserved.</p>
     </footer>
+
+    <script>
+        // Dark Mode Toggle
+        const toggleBtn = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        toggleBtn.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                toggleBtn.textContent = '🌙 Dark Mode';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                toggleBtn.textContent = '☀️ Light Mode';
+            }
+        });
+
+        // PDF Generation
+        function generatePDF() {
+            const element = document.getElementById('poems-content');
+            const opt = {
+                margin: 1,
+                filename: 'george-trialonis-poems.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().from(element).set(opt).save();
+        }
+    </script>
 </body>
 </html>
